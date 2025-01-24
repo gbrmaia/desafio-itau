@@ -1,9 +1,16 @@
-export class TransactionSchema {
-    id: string;
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
-    value: number;
-  
-    dateHour: Date;  
+@Schema({timestamps: true})
+export class Transaction {
 
-    insertInto: Date
-  }
+  @Prop({ required: true, min: 0 })
+  value: number
+
+  @Prop({ required: true }) 
+  dateHour: Date;
+
+}
+
+export const TransactionSchema = SchemaFactory.createForClass(Transaction);
+TransactionSchema.index({ dateHour: 1 });

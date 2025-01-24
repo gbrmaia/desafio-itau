@@ -11,10 +11,20 @@ export class TransactionController {
   @Post()
   @ApiOperation({ summary: 'Cria uma nova transação' })
   @ApiBody({ type: CreateTransactionDto })
-  @ApiResponse({ status: HttpStatus.CREATED, description: 'Transação criada com sucesso.' })
-  @ApiResponse({ status: HttpStatus.UNPROCESSABLE_ENTITY, description: 'Data futura ou valor inválido.' })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'Transação criada com sucesso.',
+  })
+  @ApiResponse({
+    status: HttpStatus.UNPROCESSABLE_ENTITY,
+    description: 'Data futura ou valor inválido.',
+  })
   create(@Body() createTransactionDto: CreateTransactionDto) {
-    return this.transactionService.create(createTransactionDto);
+    try {
+      return this.transactionService.create(createTransactionDto);
+    } catch (error) {
+      throw HttpStatus.SERVICE_UNAVAILABLE;
+    }
   }
 
   @Post('/deleteById')
@@ -23,16 +33,32 @@ export class TransactionController {
     description: 'ID da transação a ser deletada',
     schema: { type: 'object', properties: { id: { type: 'string' } } },
   })
-  @ApiResponse({ status: HttpStatus.OK, description: 'Transação deletada com sucesso.' })
-  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'ID inválido.' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Transação deletada com sucesso.',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'ID inválido ou não existente.',
+  })
   deleteById(@Body('id') id: string) {
-    return this.transactionService.deleteById(id);
+    try {
+      return this.transactionService.deleteById(id);
+    } catch (error) {
+      throw HttpStatus.SERVICE_UNAVAILABLE;
+    }
   }
 
   @Delete()
   @ApiOperation({ summary: 'Deleta todas as transações' })
-  @ApiResponse({ status: HttpStatus.OK, description: 'Todas as transações deletadas com sucesso.' })
-  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Não há dados na memória.' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Todas as transações deletadas com sucesso.',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Não há dados na memória.',
+  })
   deleteAll() {
     return this.transactionService.deleteAll();
   }
