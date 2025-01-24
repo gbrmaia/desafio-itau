@@ -1,7 +1,7 @@
 # API de Transações - Desafio Itaú Unibanco
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/gbrmaia/desafio-itau?style=for-the-badge)
-![GitHub language count](https://img.shields.io/github/languages/count/iuricode/desafio-itau?style=for-the-badge)
+![GitHub language count](https://img.shields.io/github/languages/count/gbrmaia/desafio-itau?style=for-the-badge)
 
 > Esta API REST foi desenvolvida como parte do desafio de programação do Itaú Unibanco. Ela permite o gerenciamento de transações financeiras, fornecendo estatísticas em tempo real, como soma, média, maior, menor valor e total de transações realizadas nos últimos 60 segundos.
 
