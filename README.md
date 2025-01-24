@@ -1,99 +1,114 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# API de Transações - Desafio Itaú Unibanco
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+![GitHub repo size](https://img.shields.io/github/repo-size/gbrmaia/README-template?style=for-the-badge)
+![GitHub language count](https://img.shields.io/github/languages/count/iuricode/README-template?style=for-the-badge)
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+> Esta API REST foi desenvolvida como parte do desafio de programação do Itaú Unibanco. Ela permite o gerenciamento de transações financeiras, fornecendo estatísticas em tempo real, como soma, média, maior, menor valor e total de transações realizadas nos últimos 60 segundos.
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## ⚙️ Endpoints Implementados
 
-## Project setup
+### 1. **Receber Transações - `POST /transacao`**
+   - **Entrada**:
+     ```json
+     {
+       "valor": 123.45,
+       "dataHora": "2020-08-07T12:34:56.789-03:00"
+     }
+     ```
+   - **Regras**:
+     - O valor deve ser positivo (>= 0).
+     - A data não pode ser no futuro.
+   - **Respostas**:
+     - `201 Created`: Transação aceita e armazenada.
+     - `422 Unprocessable Entity`: Dados inválidos.
+     - `400 Bad Request`: JSON malformado.
 
+### 2. **Limpar Transações - `DELETE /transacao`**
+   - **Descrição**: Apaga todas as transações armazenadas na memória.
+   - **Resposta**:
+     - `200 OK`: Todas as transações foram apagadas.
+
+### 3. **Calcular Estatísticas - `GET /estatistica`**
+   - **Descrição**: Retorna estatísticas das transações realizadas nos últimos 60 segundos.
+   - **Saída**:
+     ```json
+     {
+       "count": 10,
+       "sum": 1234.56,
+       "avg": 123.456,
+       "min": 12.34,
+       "max": 123.56
+     }
+     ```
+   - **Resposta**:
+     - `200 OK`: Estatísticas calculadas com sucesso.
+
+---
+
+## 💻 Pré-requisitos
+
+Antes de começar, verifique se você atendeu aos seguintes requisitos:
+
+- **Node.js** (versão 16+).
+- **NPM** (gerenciador de pacotes do Node.js).
+- Máquina com **Linux**, **Windows** ou **macOS**.
+- Familiaridade básica com APIs REST e JSON.
+
+---
+
+## 🚀 Instalando e Executando o Projeto
+
+Siga estas etapas para executar o projeto:
+
+### 1. Clone o repositório
 ```bash
-$ npm install
+git clone https://github.com/seu-usuario/seu-repositorio.git
+cd seu-repositorio
 ```
 
-## Compile and run the project
-
+### 2. Instale as dependências
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm install
 ```
 
-## Run tests
-
+### 3. Execute o servidor
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm run start
 ```
 
-## Deployment
+### 4. Acesse a API
+- **Base URL**: `http://localhost:3000`
+- **Documentação Swagger**: `http://localhost:3000/api/help`
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+---
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## ☕ Exemplos de Uso
 
+### Criar uma Transação
 ```bash
-$ npm install -g mau
-$ mau deploy
+curl -X POST http://localhost:3000/transacao \
+-H "Content-Type: application/json" \
+-d '{"valor": 150.50, "dataHora": "2023-01-23T10:30:00.000Z"}'
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### Limpar Transações
+```bash
+curl -X DELETE http://localhost:3000/transacao
+```
 
-## Resources
+### Consultar Estatísticas
+```bash
+curl -X GET http://localhost:3000/estatistica
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+---
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+## 🛠️ Tecnologias Utilizadas
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+- **Node.js** com **NestJS**.
+- **Swagger** para documentação interativa.
+- Armazenamento em memória (sem banco de dados).
+- Logger com **@nestjs/common/Logger**.
+- Tratamento de erros e validação com **ValidationPipe** e **DTOs**.
