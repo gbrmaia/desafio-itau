@@ -1,5 +1,19 @@
-import { Controller, Post, Body, Delete, HttpStatus } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBody, ApiResponse } from '@nestjs/swagger';
+import {
+  Controller,
+  Post,
+  Body,
+  Delete,
+  HttpStatus,
+  Param,
+  Get,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiBody,
+  ApiResponse,
+  ApiParam,
+} from '@nestjs/swagger';
 import { TransactionService } from './transaction.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 
@@ -11,14 +25,6 @@ export class TransactionController {
   @Post()
   @ApiOperation({ summary: 'Cria uma nova transação' })
   @ApiBody({ type: CreateTransactionDto })
-  @ApiResponse({
-    status: HttpStatus.CREATED,
-    description: 'Transação criada com sucesso.',
-  })
-  @ApiResponse({
-    status: HttpStatus.UNPROCESSABLE_ENTITY,
-    description: 'Data futura ou valor inválido.',
-  })
   create(@Body() createTransactionDto: CreateTransactionDto) {
     try {
       return this.transactionService.create(createTransactionDto);
@@ -27,19 +33,27 @@ export class TransactionController {
     }
   }
 
+  @Get('/find/:id')
+  @ApiOperation({ summary: 'Busca uma transação por id' })
+  @ApiParam({
+    name: 'id',
+    type: String,
+    required: true,
+    description: 'O ID da transação no MongoDB',
+  })
+  findById(@Param('id') id: string) {
+    try {
+      return this.transactionService.findById(id);
+    } catch (error) {
+      throw HttpStatus.SERVICE_UNAVAILABLE;
+    }
+  }
+
   @Post('/deleteById')
-  @ApiOperation({ summary: 'Deleta uma transação por ID' })
+  @ApiOperation({ summary: 'Deleta uma transação por id' })
   @ApiBody({
     description: 'ID da transação a ser deletada',
     schema: { type: 'object', properties: { id: { type: 'string' } } },
-  })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'Transação deletada com sucesso.',
-  })
-  @ApiResponse({
-    status: HttpStatus.NOT_FOUND,
-    description: 'ID inválido ou não existente.',
   })
   deleteById(@Body('id') id: string) {
     try {
@@ -49,17 +63,8 @@ export class TransactionController {
     }
   }
 
-  @Delete()
-  @ApiOperation({ summary: 'Deleta todas as transações' })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'Todas as transações deletadas com sucesso.',
-  })
-  @ApiResponse({
-    status: HttpStatus.NOT_FOUND,
-    description: 'Não há dados na memória.',
-  })
-  deleteAll() {
-    return this.transactionService.deleteAll();
-  }
+  // @Delete()
+  // deleteAll() {
+  //   return this.transactionService.deleteAll();
+  // }
 }

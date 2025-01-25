@@ -5,17 +5,20 @@ import {
   validateFutureDate,
   validateMongoId,
   validatePositiveValue,
-} from 'src/common/utils/validations.utils';
+  validateSameCpf,
+} from 'src/utils/validations.utils';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Transaction } from './schemas/transaction.schema';
-import { UseCasesMessages } from './constants/use-cases-messages';
+import { Transaction } from './schema/transaction.schema';
+import { UseCasesMessages } from '../utils/use-cases-messages.utils';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class TransactionService {
   private readonly logger = new Logger(TransactionService.name);
   constructor(
     @InjectModel(Transaction.name) private transactionModel: Model<Transaction>,
+    private readonly userService: UserService,
   ) {}
 
   async create(transaction: CreateTransactionDto): Promise<Transaction> {
@@ -23,6 +26,9 @@ export class TransactionService {
 
     validateFutureDate(transaction.dateHour);
     validatePositiveValue(transaction.value);
+    validateSameCpf(transaction.originCpf, transaction.receiverCpf);
+    await this.userService.findOne(transaction.originCpf);
+    await this.userService.findOne(transaction.receiverCpf);
 
     const savedTransaction = await this.transactionModel.create(transaction);
 
@@ -30,7 +36,33 @@ export class TransactionService {
     return savedTransaction;
   }
 
-  async deleteById(id: string) {
+  async findById(id: string): Promise<object> {
+    this.logger.debug('Searching transaction by ID');
+    validateMongoId(id);
+    const transaction = await this.transactionModel.findById(id).exec();
+    if (!transaction) {
+      throwErrorAndLog(
+        this.logger,
+        UseCasesMessages.NOT_FOUND_MONGODB_ID,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    const user = await this.userService.findOne(transaction.originCpf);
+
+    this.logger.debug('Returning transaction by ID');
+    return {
+      ...transaction.toObject(),
+      originCpf: {
+        name: user.name,
+        lastName: user.lastName,
+        email: user.email,
+        cpf: user.cpf,
+      },
+    };
+  }
+
+  async deleteById(id: string): Promise<HttpStatus> {
     this.logger.debug('Starting removal steps');
     validateMongoId(id);
     await this.findById(id);
@@ -43,19 +75,5 @@ export class TransactionService {
     this.logger.debug('Starting removal');
     this.logger.debug('End of removal steps');
     return 'All data deleted.';
-  }
-
-  private async findById(id: string) {
-    this.logger.debug('Starting search by id');
-    const idExists = await this.transactionModel.findById(id).exec();
-    if (!idExists) {
-      throwErrorAndLog(
-        this.logger,
-        UseCasesMessages.NOT_FOUND_MONGODB_ID,
-        HttpStatus.NOT_FOUND,
-      );
-    }
-    this.logger.debug('Id found');
-    return true;
   }
 }

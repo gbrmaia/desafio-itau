@@ -1,15 +1,19 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Types } from 'mongoose';
 
-@Schema({timestamps: true})
+@Schema({ timestamps: true })
 export class Transaction {
-
   @Prop({ required: true, min: 0 })
-  value: number
+  value: number;
 
-  @Prop({ required: true }) 
+  @Prop({ required: true })
   dateHour: Date;
 
+  @Prop({ required: true })
+  originCpf: string;
+
+  @Prop({ required: true })
+  receiverCpf: string;
 }
 
 export const TransactionSchema = SchemaFactory.createForClass(Transaction);
