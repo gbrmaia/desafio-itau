@@ -7,10 +7,11 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { User } from './schema/user.schema';
 import { throwErrorAndLog, validateCpf } from 'src/utils/validations.utils';
 import { UseCasesMessages } from 'src/utils/use-cases-messages.utils';
+import { TransactionStatusENUM } from 'src/types/types';
 
 @Injectable()
 export class UserService {
@@ -88,7 +89,7 @@ export class UserService {
     return { message: 'User successfully deleted' };
   }
 
-  private async findByCpf(cpf: string) {
+  async findByCpf(cpf: string) {
     this.logger.debug('Starting search by CPF');
     validateCpf(cpf);
     const cpfExists = await this.userModel.findOne({ cpf }).exec();
@@ -98,5 +99,21 @@ export class UserService {
     }
     this.logger.debug('CPF found');
     return cpfExists;
+  }
+
+  async addTransactionToUser(
+    cpf: string,
+    transactionId: Types.ObjectId,
+    status: TransactionStatusENUM,
+  ): Promise<void> {
+    this.logger.debug(`Inserting transactions in CPF: ${cpf}`);
+    await this.userModel.findOneAndUpdate(
+      { cpf },
+      {
+        $push: {
+          transactions: { transactionId, status },
+        },
+      },
+    );
   }
 }

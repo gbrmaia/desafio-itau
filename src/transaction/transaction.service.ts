@@ -12,6 +12,7 @@ import { Model } from 'mongoose';
 import { Transaction } from './schema/transaction.schema';
 import { UseCasesMessages } from '../utils/use-cases-messages.utils';
 import { UserService } from 'src/user/user.service';
+import { TransactionStatusENUM } from 'src/types/types';
 
 @Injectable()
 export class TransactionService {
@@ -23,14 +24,27 @@ export class TransactionService {
 
   async create(transaction: CreateTransactionDto): Promise<Transaction> {
     this.logger.debug('Starting transaction storage');
+    console.dir(transaction);
 
-    validateFutureDate(transaction.dateHour);
+    validateFutureDate(transaction?.dateHour || new Date());
     validatePositiveValue(transaction.value);
     validateSameCpf(transaction.originCpf, transaction.receiverCpf);
     await this.userService.findOne(transaction.originCpf);
     await this.userService.findOne(transaction.receiverCpf);
 
     const savedTransaction = await this.transactionModel.create(transaction);
+
+    await this.userService.addTransactionToUser(
+      transaction.originCpf,
+      savedTransaction._id,
+      TransactionStatusENUM.SENDED,
+    );
+
+    await this.userService.addTransactionToUser(
+      transaction.receiverCpf,
+      savedTransaction._id,
+      TransactionStatusENUM.RECEIVED,
+    );
 
     this.logger.debug('End of transaction storage, success');
     return savedTransaction;

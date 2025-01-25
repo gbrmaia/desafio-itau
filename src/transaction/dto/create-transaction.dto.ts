@@ -3,6 +3,7 @@ import {
   IsDate,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
   Length,
 } from 'class-validator';
@@ -17,8 +18,9 @@ export class CreateTransactionDto {
   @ApiProperty()
   @IsDate()
   @IsNotEmpty()
+  @IsOptional()
   @Transform(({ value }) => new Date(value))
-  dateHour: Date;
+  dateHour?: Date;
 
   @IsString()
   @IsNotEmpty()

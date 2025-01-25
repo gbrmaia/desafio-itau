@@ -6,7 +6,7 @@ export class Transaction {
   @Prop({ required: true, min: 0 })
   value: number;
 
-  @Prop({ required: true })
+  @Prop({ required: false, default: new Date() })
   dateHour: Date;
 
   @Prop({ required: true })

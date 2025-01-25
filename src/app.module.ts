@@ -3,6 +3,7 @@ import { TransactionModule } from './transaction/transaction.module';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserModule } from './user/user.module';
+import { InfoModule } from './info/info.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { UserModule } from './user/user.module';
     ),
     TransactionModule,
     UserModule,
+    InfoModule,
   ],
   controllers: [],
   providers: [],
