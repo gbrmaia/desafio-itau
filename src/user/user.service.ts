@@ -30,6 +30,32 @@ export class UserService {
     return savedUser;
   }
 
+  async update(cpf: string, updateFields: UpdateUserDto): Promise<User> {
+    const cpfExists = await this.findByCpf(cpf);
+    if (!cpfExists) {
+      throwErrorAndLog(
+        this.logger,
+        UseCasesMessages.NOT_FOUND_CPF,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    updateFields = Object.keys(updateFields).reduce((fields, key) => {
+      if (updateFields[key] !== undefined) {
+        fields[key] = updateFields[key];
+      }
+      return fields;
+    }, {});
+
+    const updatedUser = await this.userModel.findByIdAndUpdate(
+      cpfExists._id,
+      { $set: updateFields },
+      { new: true, runValidators: true },
+    );
+
+    return updatedUser as User;
+  }
+
   async findOne(cpf: string): Promise<User> {
     const cpfExists = await this.findByCpf(cpf);
     if (!cpfExists) {

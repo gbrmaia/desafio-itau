@@ -10,8 +10,8 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import { ApiOperation, ApiBody, ApiParam } from '@nestjs/swagger';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiOperation, ApiBody, ApiResponse, ApiParam } from '@nestjs/swagger';
 
 @Controller('user')
 export class UserController {
@@ -23,6 +23,23 @@ export class UserController {
   create(@Body() createUserDto: CreateUserDto) {
     try {
       return this.userService.create(createUserDto);
+    } catch (error) {
+      throw HttpStatus.SERVICE_UNAVAILABLE;
+    }
+  }
+
+  @Post('/update/:cpf')
+  @ApiOperation({ summary: 'Atualiza um usuario por cpf' })
+  @ApiParam({
+    name: 'cpf',
+    type: String,
+    required: true,
+    description: 'O cpf do usuario',
+  })
+  @ApiBody({ type: UpdateUserDto })
+  update(@Param('cpf') cpf: string, @Body() updateUserDto: UpdateUserDto) {
+    try {
+      return this.userService.update(cpf, updateUserDto);
     } catch (error) {
       throw HttpStatus.SERVICE_UNAVAILABLE;
     }
