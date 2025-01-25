@@ -10,51 +10,55 @@
 ## ⚙️ Endpoints Implementados
 
 ### 1. **Receber Transações - `POST /transacao`**
-   - **Entrada**:
-     ```json
-     {
-       "valor": 123.45,
-       "dataHora": "2020-08-07T12:34:56.789-03:00"
-     }
-     ```
-   - **Regras**:
-     - O valor deve ser positivo (>= 0).
-     - A data não pode ser no futuro.
-   - **Respostas**:
-     - `201 Created`: Transação aceita e armazenada.
-     - `422 Unprocessable Entity`: Dados inválidos.
-     - `400 Bad Request`: JSON malformado.
+
+- **Entrada**:
+  ```json
+  {
+    "valor": 123.45,
+    "dataHora": "2020-08-07T12:34:56.789-03:00"
+  }
+  ```
+- **Regras**:
+  - O valor deve ser positivo (>= 0).
+  - A data não pode ser no futuro.
+- **Respostas**:
+  - `201 Created`: Transação aceita e armazenada.
+  - `422 Unprocessable Entity`: Dados inválidos.
+  - `400 Bad Request`: JSON malformado.
 
 ### 2. **Limpar Transação por Id - `POST /transacao`**
-   - **Entrada**:
-     ```json
-     {
-       "id": "272f3935-5024-45ea-9f28-2bbbfda1b0dd"
-     }
-     ```
-   - **Descrição**: Apaga determinada transição através do seu id único.
-   - **Resposta**:
-     - `200 OK`: A transação foi apagada.
+
+- **Entrada**:
+  ```json
+  {
+    "id": "272f3935-5024-45ea-9f28-2bbbfda1b0dd"
+  }
+  ```
+- **Descrição**: Apaga determinada transição através do seu id único.
+- **Resposta**:
+  - `200 OK`: A transação foi apagada.
 
 ### 2. **Limpar Transações - `DELETE /transacao`**
-   - **Descrição**: Apaga todas as transações armazenadas na memória.
-   - **Resposta**:
-     - `200 OK`: Todas as transações foram apagadas.
+
+- **Descrição**: Apaga todas as transações armazenadas na memória.
+- **Resposta**:
+  - `200 OK`: Todas as transações foram apagadas.
 
 ### 3. **Calcular Estatísticas - `GET /estatistica`**
-   - **Descrição**: Retorna estatísticas das transações realizadas nos últimos 60 segundos.
-   - **Saída**:
-     ```json
-     {
-       "count": 10,
-       "sum": 1234.56,
-       "avg": 123.456,
-       "min": 12.34,
-       "max": 123.56
-     }
-     ```
-   - **Resposta**:
-     - `200 OK`: Estatísticas calculadas com sucesso.
+
+- **Descrição**: Retorna estatísticas das transações realizadas nos últimos 60 segundos.
+- **Saída**:
+  ```json
+  {
+    "count": 10,
+    "sum": 1234.56,
+    "avg": 123.456,
+    "min": 12.34,
+    "max": 123.56
+  }
+  ```
+- **Resposta**:
+  - `200 OK`: Estatísticas calculadas com sucesso.
 
 ---
 
@@ -74,27 +78,32 @@ Antes de começar, verifique se você atendeu aos seguintes requisitos:
 Siga estas etapas para executar o projeto:
 
 ### 1. Clone o repositório
+
 ```bash
 git clone https://github.com/gbrmaia/desafio-itau.git
 cd desafio-itau
 ```
 
 ### 2. Instale as dependências
+
 ```bash
 npm install
 ```
 
 ### 3. Execute o servidor
+
 ```bash
 npm run start
 ```
 
 ### 3.1 Execute o servidor em modo desenvolvedor
+
 ```bash
 npm run start
 ```
 
 ### 4. Acesse a API
+
 - **Base URL**: `http://localhost:3000`
 - **Documentação Swagger**: `http://localhost:3000/api/help`
 
@@ -103,6 +112,7 @@ npm run start
 ## ☕ Exemplos de Uso
 
 ### Criar uma Transação
+
 ```bash
 curl -X POST http://localhost:3000/transacao \
 -H "Content-Type: application/json" \
@@ -110,6 +120,7 @@ curl -X POST http://localhost:3000/transacao \
 ```
 
 ### Apagar uma Transação pelo seu Id
+
 ```bash
 curl -X POST http://localhost:3000/transacao \
 -H "Content-Type: application/json" \
@@ -117,11 +128,13 @@ curl -X POST http://localhost:3000/transacao \
 ```
 
 ### Limpar Transações
+
 ```bash
 curl -X DELETE http://localhost:3000/transacao
 ```
 
 ### Consultar Estatísticas
+
 ```bash
 curl -X GET http://localhost:3000/estatistica
 ```
@@ -165,11 +178,11 @@ src
 Uma lista de tarefas e ideias para futuras implementações no projeto, organizadas por prioridade e complexidade:
 
 ### 🔧 Funcionalidades Prioritárias (próximos dias)
+
 - [ ] **Testes Unitários para TransactionModule**:
   - Dívida técnica
-- [ ] **Integrar MongoDB no projeto**:
-  - Criar um `TransactionDatabaseService` para gerenciar a comunicação com o banco.
-  - Migrar a lógica de armazenamento em memória para o MongoDB.
+- [x] **Integrar MongoDB no projeto**:
+  - Feito.
 - [ ] **Implementar testes unitários básicos**:
   - Testar o comportamento dos endpoints principais (`/transacao`, `/estatistica`, `/delete`).
   - Simular casos de erro como valores negativos ou data inválida.
@@ -178,6 +191,7 @@ Uma lista de tarefas e ideias para futuras implementações no projeto, organiza
   - Retornar status da aplicação.
 
 ### 🌟 Funcionalidades e Melhorias Adicionais
+
 - [ ] **Autenticação e segurança**:
   - Adicionar autenticação com JWT para proteger os endpoints.
   - Permitir criar e gerenciar tokens para autenticação.
@@ -191,8 +205,9 @@ Uma lista de tarefas e ideias para futuras implementações no projeto, organiza
   - Documentar os requisitos de autenticação no Swagger (após implementar JWT).
 
 ### 🚀 Funcionalidades Futuras (Médio/Longo Prazo)
-- [ ] **Customizar o intervalo de cálculo de estatísticas**:
-  - Tornar o intervalo de tempo (60 segundos) configurável por meio de variáveis de ambiente.
+
+- [x] **Customizar o intervalo de cálculo de estatísticas**:
+  - Feito.
 - [ ] **Melhorar a performance do cálculo de estatísticas**:
   - Utilizar índices ou estruturas otimizadas para buscar apenas as transações relevantes.
   - Implementar caching para reduzir o custo de operações repetidas.
@@ -200,11 +215,11 @@ Uma lista de tarefas e ideias para futuras implementações no projeto, organiza
   - Criar um pequeno painel com métricas sobre as transações e estatísticas, utilizando frameworks como React ou Angular.
 
 ### 🛠️ Manutenção Contínua
+
 - [ ] Refatorar e organizar os serviços e módulos.
 - [ ] Atualizar dependências regularmente para evitar problemas de segurança.
 - [ ] Adicionar mais testes unitários e de integração para garantir a qualidade do código.
 
 ---
 
-⚡ *Se tiver novas ideias, adicione à lista para priorizar futuramente!*
-
+⚡ _Se tiver novas ideias, adicione à lista para priorizar futuramente!_
