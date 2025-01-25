@@ -25,6 +25,19 @@ export function validateFutureDate(dateHour: Date): void {
   }
 }
 
+export function validateStartDateGreaterThanEndDate(
+  startDate: Date,
+  endDate: Date,
+): void {
+  if (startDate > endDate) {
+    throwErrorAndLog(
+      logger,
+      UseCasesMessages.INVALID_STARTER_DATE_GREATER_THEN_END_DATE,
+      HttpStatus.UNPROCESSABLE_ENTITY,
+    );
+  }
+}
+
 export function validatePositiveValue(value: number): void {
   if (value <= 0) {
     throwErrorAndLog(

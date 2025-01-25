@@ -26,10 +26,12 @@ export class InfoController {
   @ApiQuery({
     name: 'startDate',
     required: false,
+    default: new Date(),
     description: 'Data de início ISO',
   })
   @ApiQuery({
     name: 'endDate',
+    default: new Date(),
     required: false,
     description: 'Data de fim ISO',
   })
@@ -76,10 +78,12 @@ export class InfoController {
   @ApiQuery({
     name: 'startDate',
     required: false,
+    default: new Date(),
     description: 'Data de início ISO',
   })
   @ApiQuery({
     name: 'endDate',
+    default: new Date(),
     required: false,
     description: 'Data de fim ISO',
   })

@@ -13,6 +13,7 @@ import { UserService } from 'src/user/user.service';
 import {
   validateFutureDate,
   validatePositiveValue,
+  validateStartDateGreaterThanEndDate,
 } from 'src/utils/validations.utils';
 
 @Injectable()
@@ -30,6 +31,10 @@ export class InfoService {
     const query: Record<string, any> = {};
 
     validateFutureDate(filters?.endDate || new Date());
+    validateStartDateGreaterThanEndDate(
+      filters?.startDate || new Date(),
+      filters?.endDate || new Date(),
+    );
     validatePositiveValue(filters?.minValue || 1);
     validatePositiveValue(filters?.maxValue || 1);
 
